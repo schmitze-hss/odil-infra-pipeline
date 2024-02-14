@@ -1,7 +1,17 @@
+# MacOS
+.DS_Store
+
+# PyCharm
+.idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# CFN
+tests/*
+rendered_templates/
 
 # C extensions
 *.so

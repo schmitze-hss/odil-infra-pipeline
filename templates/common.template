@@ -1,0 +1,90 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Common Parameters Template
+  Use this template in nested templates to set common values
+
+# ---------------------------------------------------------------------------------------------------------
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: General ID Settings
+        Parameters:
+          - ProjectName
+          - TicketId
+    ParameterLabels:
+      ProjectName:
+        default: "Project Name"
+      TicketId:
+        default: "Ticket Id"
+
+# ---------------------------------------------------------------------------------------------------------
+Parameters:
+  # ========== Environment ==========
+#  EnvironmentId:
+#    Type: String
+#    Default: dev
+#    AllowedValues:
+#      - dev
+#      - test
+#      - prod
+#    Description: Deployment Environment
+  # ========== Project Name ==========
+  ProjectName:
+    Type: String
+    Default: baseline
+    Description: >
+      The Project Name (will be used in naming resources)
+    AllowedPattern: ([a-z]+[-a-z0-9]+)
+    ConstraintDescription: Lowercase letters, numbers, and dashes only.  Must start with a character.
+    MinLength: 4
+    MaxLength: 25
+  # ========== Ticket ID ==========
+  TicketId:
+    Type: String
+    Description: > 
+      The Jira ticket, e.g. 'odil-0000', or 'odil-main' for initial creation (will be used in naming resources)
+    AllowedPattern: (odil(-([0-9]+|test|main))+)
+    ConstraintDescription: The id has to be in the format 'odil-0123' or 'odil-test' or 'odil-main'
+    MinLength: 6
+    MaxLength: 12
+
+# ---------------------------------------------------------------------------------------------------------
+Mappings:
+  AccountMap:
+    "945519043780":
+      Environment: dev
+    "111111111111":
+      Environment: test
+    "222222222222":
+      Environment: prod
+#  ParametersMap:
+#    ProjectName:
+#      Value: !Ref ProjectName
+#    TicketId:
+#      Value: !Ref TicketId
+
+# ---------------------------------------------------------------------------------------------------------
+Resources:
+  NullResource:
+    Description: Placeholder resource
+    Type: AWS::CloudFormation::WaitConditionHandle
+
+# ---------------------------------------------------------------------------------------------------------
+Outputs:
+  EnvironmentName:
+    Description: Environment [dev, test, prod]
+    Value: !FindInMap [AccountMap, !Ref "AWS::AccountId", Environment]
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", EnvironmentName ] ]
+  ProjectName:
+    Description: ProjectName Parameter
+    Value: !Ref ProjectName
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName",  ProjectName] ]
+  TicketIdName:
+    Description: TicketId Parameter
+    Value: !Ref TicketId
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName",  TicketId ] ]

@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Testing Nested Templates
+
+# ---------------------------------------------------------------------------------------------------------
+Resources:
+  CommonStack:
+    Description: Placeholder resource
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-d7f6kvheesuk-us-east-1.s3.amazonaws.com/2024-02-14T200215.229Zpz5-test_odil.yaml
+
+# ---------------------------------------------------------------------------------------------------------
+Outputs:
+  EnvironmentName:
+    Description: Imported Environment Name
+    Value: Fn::ImportValue 
+      - !Join [ ":", [ !Ref "AWS::StackName", EnvironmentName ] ]
